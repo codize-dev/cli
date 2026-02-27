@@ -5,7 +5,10 @@ import { registerRunCommand } from "./commands/run.ts";
 
 const program = new Command();
 
-program.name("codize").version(packageJson.version);
+program
+  .name("codize")
+  .description("A CLI tool for executing source files in the Codize Sandbox.")
+  .version(packageJson.version);
 
 registerRunCommand(program);
 

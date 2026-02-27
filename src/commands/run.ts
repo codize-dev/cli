@@ -48,7 +48,7 @@ function readFiles(files: string[]): { name: string; content: string }[] {
 export function registerRunCommand(program: Command): void {
   program
     .command("run")
-    .description("Execute source files in the Codize sandbox")
+    .description("Execute source files in the Codize Sandbox")
     .argument("<files...>", "Source files to execute")
     .option(
       "-l, --language <language>",
