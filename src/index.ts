@@ -1,13 +1,19 @@
 import { Command } from "commander";
 import packageJson from "../package.json" with { type: "json" };
+import { CliError } from "./error.ts";
+import { registerRunCommand } from "./commands/run.ts";
 
 const program = new Command();
 
-program
-  .name("TODO")
-  .version(packageJson.version)
-  .action(() => {
-    console.log("hello world");
-  });
+program.name("codize").version(packageJson.version);
 
-program.parse(process.argv);
+registerRunCommand(program);
+
+program.parseAsync(process.argv).catch((err: unknown) => {
+  const message =
+    err instanceof CliError
+      ? err.message
+      : `Unexpected error: ${err instanceof Error ? err.message : String(err)}`;
+  process.stderr.write(`error: ${message}\n`);
+  process.exit(err instanceof CliError ? err.exitCode : 1);
+});
