@@ -1,5 +1,17 @@
 # Changelog
 
+## [0.1.0](https://github.com/codize-dev/cli/compare/v0.0.1...v0.1.0) (2026-02-27)
+
+
+### Features
+
+* Release v0.1.0 ([1aa35d2](https://github.com/codize-dev/cli/commit/1aa35d2d961a3eaae9c80f21baca4bdb11d6d731))
+
+
+### Bug Fixes
+
+* Capitalize 'Sandbox' in run command description ([7c7fd75](https://github.com/codize-dev/cli/commit/7c7fd756bac93252fec25d54fb5d4c45ade9876a))
+
 ## 0.0.1 (2026-02-27)
 
 
