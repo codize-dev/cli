@@ -5,7 +5,7 @@
     "": {
       "name": "cli",
       "dependencies": {
-        "@codize/sdk": "0.1.1",
+        "@codize/sdk": "0.1.2",
         "commander": "14.0.3",
       },
       "devDependencies": {
@@ -16,7 +16,7 @@
     },
   },
   "packages": {
-    "@codize/sdk": ["@codize/sdk@0.1.1", "", { "dependencies": { "valibot": "1.2.0" } }, "sha512-GBfm+8lEgBYuRZweJjO3I1w/GPI5+7eyPXUriNGkfoDyBV4IvS97JBTFrcLtuaPkIToHLRYXoTr708sLSmK3cg=="],
+    "@codize/sdk": ["@codize/sdk@0.1.2", "", { "dependencies": { "valibot": "1.2.0" } }, "sha512-6bw1R53OwqPt2/f4r6qLkpOvzt/jYiy/rl2mfWHNTx8UYDFuL+J4OghxNYc7G059J6gnbGhXw1TZVS2MxyFXuA=="],
 
     "@types/bun": ["@types/bun@1.3.9", "", { "dependencies": { "bun-types": "1.3.9" } }, "sha512-KQ571yULOdWJiMH+RIWIOZ7B2RXQGpL1YQrBtLIV3FqDcCu6FsbFUBwhdKUlCKUpS3PJDsHlJ1QKlpxoVR+xtw=="],
 
