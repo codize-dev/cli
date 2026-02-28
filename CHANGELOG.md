@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.5.0](https://github.com/codize-dev/cli/compare/v0.4.0...v0.5.0) (2026-02-28)
+
+
+### Features
+
+* Add config file support for API key persistence ([a8e691f](https://github.com/codize-dev/cli/commit/a8e691faa4439daed9a84f709fb903ea2b2b04a8))
+
 ## [0.4.0](https://github.com/codize-dev/cli/compare/v0.3.1...v0.4.0) (2026-02-28)
 
 
