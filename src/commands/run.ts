@@ -159,12 +159,17 @@ export function registerRunCommand(program: Command): void {
           }
         }
 
-        if (result.data.compile != null && result.data.compile.exitCode !== 0) {
-          process.exitCode = result.data.compile.exitCode ?? 1;
-        } else if (result.data.run != null) {
-          process.exitCode = result.data.run.exitCode ?? 1;
-        } else {
-          process.exitCode = 1;
+        if (!options.json) {
+          if (
+            result.data.compile != null &&
+            result.data.compile.exitCode !== 0
+          ) {
+            process.exitCode = result.data.compile.exitCode ?? 1;
+          } else if (result.data.run != null) {
+            process.exitCode = result.data.run.exitCode ?? 1;
+          } else {
+            process.exitCode = 1;
+          }
         }
       },
     );
