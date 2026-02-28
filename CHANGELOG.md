@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.3.0](https://github.com/codize-dev/cli/compare/v0.2.1...v0.3.0) (2026-02-28)
+
+
+### Features
+
+* Add --eval option to run command for inline code execution ([42ea4b9](https://github.com/codize-dev/cli/commit/42ea4b9b9706356c7a67f659f9bde8329e1afaab))
+
 ## [0.2.1](https://github.com/codize-dev/cli/compare/v0.2.0...v0.2.1) (2026-02-28)
 
 
