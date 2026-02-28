@@ -17,13 +17,23 @@ $ npx @codize/cli --help
 
 ## Usage
 
-### Authentication
+### Configuration
 
-Generate your API key at [codize.dev/settings/api-keys](https://codize.dev/settings/api-keys), then set the `CODIZE_API_KEY` environment variable or pass the `--api-key` flag:
+Generate your API key at [codize.dev/settings/api-keys](https://codize.dev/settings/api-keys), then configure it using one of the following methods (listed in priority order):
+
+1. **CLI flag:** `--api-key`
+2. **Environment variable:** `CODIZE_API_KEY`
+3. **Config file:** `codize config set api-key <key>`
 
 ```bash
+# Save API key to config file (recommended)
+$ codize config set api-key cdz_YourApiKeyHere
+
+# Or use an environment variable
 $ export CODIZE_API_KEY="cdz_YourApiKeyHere"
 ```
+
+The config file is stored at `$XDG_CONFIG_HOME/codize/config.json` (defaults to `~/.config/codize/config.json`).
 
 ### Running a File
 

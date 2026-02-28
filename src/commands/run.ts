@@ -2,6 +2,7 @@ import { readFileSync } from "node:fs";
 import { basename, extname } from "node:path";
 import { CodizeApiError, CodizeClient } from "@codize/sdk";
 import type { Command } from "commander";
+import { readConfig } from "../config.ts";
 import { CliError } from "../error.ts";
 
 const EXTENSION_TO_LANGUAGE: Record<string, string> = {
@@ -94,10 +95,12 @@ export function registerRunCommand(program: Command): void {
           );
         }
 
-        const apiKey = options.apiKey ?? process.env["CODIZE_API_KEY"];
+        const config = readConfig();
+        const apiKey =
+          options.apiKey ?? process.env["CODIZE_API_KEY"] ?? config.apiKey;
         if (!apiKey) {
           throw new CliError(
-            "API key is required. Set CODIZE_API_KEY or use --api-key.",
+            "API key is required. Use --api-key, set CODIZE_API_KEY, or run `codize config set api-key <key>`.",
           );
         }
 

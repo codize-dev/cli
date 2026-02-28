@@ -35,15 +35,17 @@ npx prettier --check .
 ## Architecture
 
 ```
-src/index.ts          — Entry point: sets up Commander program, registers commands, handles top-level errors
-src/error.ts          — CliError class (extends Error with exitCode)
-src/commands/run.ts   — `codize run` command: reads files, calls CodizeClient.sandbox.execute(), outputs results
-scripts/build.ts      — Build script using Bun.build API
+src/index.ts            — Entry point: sets up Commander program, registers commands, handles top-level errors
+src/error.ts            — CliError class (extends Error with exitCode)
+src/config.ts           — Config file read/write (path resolution, JSON parsing, validation)
+src/commands/run.ts     — `codize run` command: reads files, calls CodizeClient.sandbox.execute(), outputs results
+src/commands/config.ts  — `codize config` command: set/get/list/path subcommands for CLI configuration
+scripts/build.ts        — Build script using Bun.build API
 ```
 
 ### Command Registration Pattern
 
-Each command is defined in `src/commands/` and exports a `register*Command(program)` function that is called from `src/index.ts`. The `run` command is currently the only command.
+Each command is defined in `src/commands/` and exports a `register*Command(program)` function that is called from `src/index.ts`.
 
 ### Error Handling
 

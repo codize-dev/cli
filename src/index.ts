@@ -1,7 +1,8 @@
 import { Command } from "commander";
 import packageJson from "../package.json" with { type: "json" };
-import { CliError } from "./error.ts";
+import { registerConfigCommand } from "./commands/config.ts";
 import { registerRunCommand } from "./commands/run.ts";
+import { CliError } from "./error.ts";
 
 const program = new Command();
 
@@ -11,6 +12,7 @@ program
   .version(packageJson.version);
 
 registerRunCommand(program);
+registerConfigCommand(program);
 
 program.parseAsync(process.argv).catch((err: unknown) => {
   const message =
