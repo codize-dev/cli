@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.1](https://github.com/codize-dev/cli/compare/v0.2.0...v0.2.1) (2026-02-28)
+
+
+### Bug Fixes
+
+* Handle nullable run field in sandbox execution result ([192e824](https://github.com/codize-dev/cli/commit/192e8247a356ae4569c3c48e9d4c43ad944b8e11))
+
 ## [0.2.0](https://github.com/codize-dev/cli/compare/v0.1.0...v0.2.0) (2026-02-28)
 
 
