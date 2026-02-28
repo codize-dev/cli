@@ -13,6 +13,15 @@ const EXTENSION_TO_LANGUAGE: Record<string, string> = {
   ".rs": "rust",
 };
 
+const LANGUAGE_TO_EXTENSION: Record<string, string> = {
+  typescript: ".ts",
+  javascript: ".js",
+  python: ".py",
+  ruby: ".rb",
+  go: ".go",
+  rust: ".rs",
+};
+
 function detectLanguage(filePath: string): string | null {
   const ext = extname(filePath).toLowerCase();
   return EXTENSION_TO_LANGUAGE[ext] ?? null;
@@ -49,7 +58,7 @@ export function registerRunCommand(program: Command): void {
   program
     .command("run")
     .description("Execute source files in the Codize Sandbox")
-    .argument("<files...>", "Source files to execute")
+    .argument("[files...]", "Source files to execute")
     .option(
       "-l, --language <language>",
       "Language override (auto-detected from extension by default)",
@@ -59,11 +68,32 @@ export function registerRunCommand(program: Command): void {
       "Codize API key (defaults to CODIZE_API_KEY env var)",
     )
     .option("--json", "Output result as JSON instead of plain text")
+    .option(
+      "-e, --eval <code>",
+      "Inline code to execute (requires --language, can be specified multiple times)",
+      (val: string, prev: string[]) => [...prev, val],
+      [] as string[],
+    )
     .action(
       async (
         files: string[],
-        options: { language?: string; apiKey?: string; json?: boolean },
+        options: {
+          language?: string;
+          apiKey?: string;
+          json?: boolean;
+          eval: string[];
+        },
       ) => {
+        if (options.eval.length > 0 && files.length > 0) {
+          throw new CliError("Cannot use --eval together with file arguments.");
+        }
+
+        if (options.eval.length === 0 && files.length === 0) {
+          throw new CliError(
+            "No input provided. Specify source files or use --eval.",
+          );
+        }
+
         const apiKey = options.apiKey ?? process.env["CODIZE_API_KEY"];
         if (!apiKey) {
           throw new CliError(
@@ -71,8 +101,25 @@ export function registerRunCommand(program: Command): void {
           );
         }
 
-        const language = options.language ?? resolveLanguage(files);
-        const filePayloads = readFiles(files);
+        let language: string;
+        let filePayloads: { name: string; content: string }[];
+
+        if (options.eval.length > 0) {
+          if (!options.language) {
+            throw new CliError(
+              "Option --language is required when using --eval.",
+            );
+          }
+          language = options.language;
+          const ext = LANGUAGE_TO_EXTENSION[language] ?? "";
+          filePayloads = options.eval.map((code, i) => ({
+            name: `file${i}${ext}`,
+            content: code,
+          }));
+        } else {
+          language = options.language ?? resolveLanguage(files);
+          filePayloads = readFiles(files);
+        }
 
         const client = new CodizeClient({ apiKey });
         let result: Awaited<ReturnType<typeof client.sandbox.execute>>;
