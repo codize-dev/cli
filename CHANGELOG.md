@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.2.0](https://github.com/codize-dev/cli/compare/v0.1.0...v0.2.0) (2026-02-28)
+
+
+### Features
+
+* Add --json output option to run command ([86749c0](https://github.com/codize-dev/cli/commit/86749c018e4c3cbe6fefd1df6be148020dfa32a2))
+
 ## [0.1.0](https://github.com/codize-dev/cli/compare/v0.0.1...v0.1.0) (2026-02-27)
 
 
