@@ -130,9 +130,14 @@ export function registerRunCommand(program: Command): void {
           });
         } catch (err) {
           if (err instanceof CodizeApiError) {
-            throw new CliError(
-              `API error [${err.code}] ${err.message} (HTTP ${err.status})`,
-            );
+            let message = `API error [${err.code}] ${err.message} (HTTP ${err.status})`;
+            if (err.errors != null && err.errors.length > 0) {
+              const details = err.errors
+                .map((e) => `  - ${e.path.join(".")}: ${e.message}`)
+                .join("\n");
+              message += "\n" + details;
+            }
+            throw new CliError(message);
           }
           throw err;
         }
