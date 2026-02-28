@@ -102,13 +102,17 @@ export function registerRunCommand(program: Command): void {
           ) {
             process.stderr.write(result.data.compile.output);
           }
-          process.stdout.write(result.data.run.output);
+          if (result.data.run != null) {
+            process.stdout.write(result.data.run.output);
+          }
         }
 
         if (result.data.compile != null && result.data.compile.exitCode !== 0) {
           process.exitCode = result.data.compile.exitCode ?? 1;
-        } else {
+        } else if (result.data.run != null) {
           process.exitCode = result.data.run.exitCode ?? 1;
+        } else {
+          process.exitCode = 1;
         }
       },
     );
