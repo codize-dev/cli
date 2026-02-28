@@ -37,6 +37,28 @@ You can pass multiple files:
 $ codize run main.ts utils.ts
 ```
 
+### JSON Output
+
+Use `--json` to get structured output for programmatic use:
+
+```bash
+$ codize run main.ts --json
+{
+  "compile": {
+    "stdout": "",
+    "stderr": "",
+    "output": "",
+    "exitCode": 0
+  },
+  "run": {
+    "stdout": "Hello\n",
+    "stderr": "",
+    "output": "Hello\n",
+    "exitCode": 0
+  }
+}
+```
+
 ## License
 
 [MIT](../LICENSE)

@@ -58,10 +58,11 @@ export function registerRunCommand(program: Command): void {
       "-k, --api-key <key>",
       "Codize API key (defaults to CODIZE_API_KEY env var)",
     )
+    .option("--json", "Output result as JSON instead of plain text")
     .action(
       async (
         files: string[],
-        options: { language?: string; apiKey?: string },
+        options: { language?: string; apiKey?: string; json?: boolean },
       ) => {
         const apiKey = options.apiKey ?? process.env["CODIZE_API_KEY"];
         if (!apiKey) {
@@ -89,11 +90,21 @@ export function registerRunCommand(program: Command): void {
           throw err;
         }
 
-        if (result.data.compile != null && result.data.compile.output !== "") {
-          process.stderr.write(result.data.compile.output);
+        if (options.json) {
+          const indent = process.stdout.isTTY ? 2 : undefined;
+          process.stdout.write(
+            JSON.stringify(result.data, null, indent) + "\n",
+          );
+        } else {
+          if (
+            result.data.compile != null &&
+            result.data.compile.output !== ""
+          ) {
+            process.stderr.write(result.data.compile.output);
+          }
+          process.stdout.write(result.data.run.output);
         }
 
-        process.stdout.write(result.data.run.output);
         if (result.data.compile != null && result.data.compile.exitCode !== 0) {
           process.exitCode = result.data.compile.exitCode ?? 1;
         } else {

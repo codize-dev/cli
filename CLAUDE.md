@@ -20,6 +20,9 @@ bun run build
 
 # Type check (no test or lint scripts are configured)
 npx tsc --noEmit
+
+# Format check
+npx prettier --check .
 ```
 
 ## Build System
