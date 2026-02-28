@@ -1,5 +1,13 @@
 # Changelog
 
+## [0.3.1](https://github.com/codize-dev/cli/compare/v0.3.0...v0.3.1) (2026-02-28)
+
+
+### Bug Fixes
+
+* Display field-level validation error details from CodizeApiError ([8636496](https://github.com/codize-dev/cli/commit/86364962f6060668462be617f5cd9ecc03f84324))
+* Do not inherit sandbox exit code in JSON output mode ([da24b07](https://github.com/codize-dev/cli/commit/da24b076cb0c9e43e9d69e0092ce5675a94c5aec))
+
 ## [0.3.0](https://github.com/codize-dev/cli/compare/v0.2.1...v0.3.0) (2026-02-28)
 
 
