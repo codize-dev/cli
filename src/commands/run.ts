@@ -1,42 +1,49 @@
 import { readFileSync } from "node:fs";
 import { basename, extname } from "node:path";
-import { CodizeApiError, CodizeClient } from "@codize/sdk";
+import {
+  CodizeApiError,
+  CodizeClient,
+  type SandboxExecuteResponse,
+  type SandboxRuntime,
+} from "@codize/sdk";
 import type { Command } from "commander";
 import { readConfig } from "../config.ts";
 import { CliError } from "../error.ts";
 
-const EXTENSION_TO_LANGUAGE: Record<string, string> = {
-  ".ts": "typescript",
-  ".js": "javascript",
+const EXTENSION_TO_RUNTIME: Record<string, SandboxRuntime> = {
+  ".ts": "node-typescript",
+  ".js": "node",
   ".py": "python",
   ".rb": "ruby",
   ".go": "go",
   ".rs": "rust",
+  ".sh": "bash",
 };
 
-const LANGUAGE_TO_EXTENSION: Record<string, string> = {
-  typescript: ".ts",
-  javascript: ".js",
+const RUNTIME_TO_EXTENSION: Record<SandboxRuntime, string> = {
+  "node-typescript": ".ts",
+  node: ".js",
   python: ".py",
   ruby: ".rb",
   go: ".go",
   rust: ".rs",
+  bash: ".sh",
 };
 
-function detectLanguage(filePath: string): string | null {
+function detectRuntime(filePath: string): SandboxRuntime | null {
   const ext = extname(filePath).toLowerCase();
-  return EXTENSION_TO_LANGUAGE[ext] ?? null;
+  return EXTENSION_TO_RUNTIME[ext] ?? null;
 }
 
-function resolveLanguage(files: string[]): string {
+function resolveRuntime(files: string[]): SandboxRuntime {
   const entrypoint = files[0];
   if (entrypoint == null) {
     throw new CliError("No files specified.");
   }
-  const detected = detectLanguage(entrypoint);
+  const detected = detectRuntime(entrypoint);
   if (detected == null) {
     throw new CliError(
-      `Cannot detect language for '${entrypoint}'. Use --language to specify.`,
+      `Cannot detect runtime for '${entrypoint}'. Use --runtime to specify.`,
     );
   }
   return detected;
@@ -55,14 +62,18 @@ function readFiles(files: string[]): { name: string; content: string }[] {
   });
 }
 
+function decodeBase64(encoded: string): string {
+  return Buffer.from(encoded, "base64").toString();
+}
+
 export function registerRunCommand(program: Command): void {
   program
     .command("run")
     .description("Execute source files in the Codize Sandbox")
     .argument("[files...]", "Source files to execute")
     .option(
-      "-l, --language <language>",
-      "Language override (auto-detected from extension by default)",
+      "-r, --runtime <runtime>",
+      "Runtime override (auto-detected from extension by default)",
     )
     .option(
       "-k, --api-key <key>",
@@ -71,7 +82,7 @@ export function registerRunCommand(program: Command): void {
     .option("--json", "Output result as JSON instead of plain text")
     .option(
       "-e, --eval <code>",
-      "Inline code to execute (requires --language, can be specified multiple times)",
+      "Inline code to execute (requires --runtime, can be specified multiple times)",
       (val: string, prev: string[]) => [...prev, val],
       [] as string[],
     )
@@ -79,7 +90,7 @@ export function registerRunCommand(program: Command): void {
       async (
         files: string[],
         options: {
-          language?: string;
+          runtime?: SandboxRuntime;
           apiKey?: string;
           json?: boolean;
           eval: string[];
@@ -104,31 +115,31 @@ export function registerRunCommand(program: Command): void {
           );
         }
 
-        let language: string;
+        let runtime: SandboxRuntime;
         let filePayloads: { name: string; content: string }[];
 
         if (options.eval.length > 0) {
-          if (!options.language) {
+          if (!options.runtime) {
             throw new CliError(
-              "Option --language is required when using --eval.",
+              "Option --runtime is required when using --eval.",
             );
           }
-          language = options.language;
-          const ext = LANGUAGE_TO_EXTENSION[language] ?? "";
+          runtime = options.runtime;
+          const ext = RUNTIME_TO_EXTENSION[runtime] ?? "";
           filePayloads = options.eval.map((code, i) => ({
             name: `file${i}${ext}`,
             content: code,
           }));
         } else {
-          language = options.language ?? resolveLanguage(files);
+          runtime = options.runtime ?? resolveRuntime(files);
           filePayloads = readFiles(files);
         }
 
         const client = new CodizeClient({ apiKey });
-        let result: Awaited<ReturnType<typeof client.sandbox.execute>>;
+        let result: SandboxExecuteResponse;
         try {
           result = await client.sandbox.execute({
-            language,
+            runtime,
             files: filePayloads,
           });
         } catch (err) {
@@ -155,10 +166,10 @@ export function registerRunCommand(program: Command): void {
             result.data.compile != null &&
             result.data.compile.output !== ""
           ) {
-            process.stderr.write(result.data.compile.output);
+            process.stderr.write(decodeBase64(result.data.compile.output));
           }
           if (result.data.run != null) {
-            process.stdout.write(result.data.run.output);
+            process.stdout.write(decodeBase64(result.data.run.output));
           }
         }
 
@@ -167,9 +178,9 @@ export function registerRunCommand(program: Command): void {
             result.data.compile != null &&
             result.data.compile.exitCode !== 0
           ) {
-            process.exitCode = result.data.compile.exitCode ?? 1;
+            process.exitCode = result.data.compile.exitCode;
           } else if (result.data.run != null) {
-            process.exitCode = result.data.run.exitCode ?? 1;
+            process.exitCode = result.data.run.exitCode;
           } else {
             process.exitCode = 1;
           }
