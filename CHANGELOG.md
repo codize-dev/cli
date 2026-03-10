@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.6.0](https://github.com/codize-dev/cli/compare/v0.5.0...v0.6.0) (2026-03-10)
+
+
+### Features
+
+* Update sdk to v0.3.1 and migrate to runtime-based API ([c6a9e5e](https://github.com/codize-dev/cli/commit/c6a9e5e54424aad46ed6caf26b52669cdd9c21bf))
+
 ## [0.5.0](https://github.com/codize-dev/cli/compare/v0.4.0...v0.5.0) (2026-02-28)
 
 
