@@ -61,9 +61,9 @@ $ codize run main.ts --json
     "exitCode": 0
   },
   "run": {
-    "stdout": "Hello\n",
+    "stdout": "SGVsbG8K",
     "stderr": "",
-    "output": "Hello\n",
+    "output": "SGVsbG8K",
     "exitCode": 0
   }
 }
