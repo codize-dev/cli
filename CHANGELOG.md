@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.7.0](https://github.com/codize-dev/cli/compare/v0.6.0...v0.7.0) (2026-06-15)
+
+
+### Features
+
+* Update @codize/sdk to v0.4.0 ([7ea16a1](https://github.com/codize-dev/cli/commit/7ea16a1be23716b06cf254ea4e1363ff1a364b5f))
+
 ## [0.6.0](https://github.com/codize-dev/cli/compare/v0.5.0...v0.6.0) (2026-03-10)
 
 
